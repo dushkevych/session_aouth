@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+const { Schema, model } = require('mongoose');
 
 // Create Schema
 const UserSchema = new Schema({
@@ -13,14 +13,10 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
-  register_date: {
-    type: Date,
-    default: Date.now
-  }
-});
+}, {timestamps: true});
 
 const User = model('user', UserSchema);
 
-export default User;
+module.exports = User;
