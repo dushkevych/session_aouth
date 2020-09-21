@@ -1,42 +1,58 @@
-import React from 'react';
+import React from 'react'
+import { Redirect } from 'react-router-dom'
 
 export default class Login extends React.Component {
-    state = {
-        username: '',
-        password: '',
-        loggedIn: false,
+    constructor() {
+        super()
+        let loggedIn = false;
+        this.state = {
+            username: "",
+            password: "",
+            loggedIn
+        }
+        this.onFormSubmit = this.onFormSubmit.bind(this)
+        this.onChange = this.onChange.bind(this)
     }
 
-    onSubmit(e) {
-        console.log('from Login form', this.state)
+    onFormSubmit(e) {
         e.preventDefault();
+
+        if (this.state.username === "a" && this.state.password === "a") {
+            localStorage.setItem("token", "valentyn")
+            this.setState({ loggedIn: true })
+        }
     }
     onChange(e) {
-        const { name, value } = e.target;
-
         this.setState({
-            [name]: value,
+            [e.target.name]: e.target.value
         })
     }
 
 
     render() {
+        if(this.state.loggedIn){
+            return <Redirect to="/admin" />
+        }
         return (
             <div>
-                <form onSubmit={this.onSubmit} >
+                <form onSubmit={this.onFormSubmit} >
                     <input
+                        type="text"
                         name="username"
                         placeholder="Username"
                         value={this.state.username}
                         onChange={this.onChange}
 
                     />
+                    <br />
                     <input
+                        type="password"
                         name="password"
                         placeholder="Password"
                         value={this.state.password}
                         onChange={this.onChange}
                     />
+                    <br />
                     <input type='submit' />
                 </form>
             </div>
