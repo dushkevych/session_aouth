@@ -1,10 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
-const port = 3000
+const port = 5000
 
 const dbConnect = require('../server/config/db-connection');
 const userRoutes = require('./routes/users');
+const loginRoute = require('./routes/login')
 //DB Config
 // const uri = "mongodb+srv://saas_backend_1412:V11S5OY5Kq7w1s9e@cluster0.syqmf.mongodb.net/saas_startup?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true";
 
@@ -26,6 +27,6 @@ app.use('/', express.static('./dist', {
   index: "index.html"
 }))
 
-app.use('/users', userRoutes);
+app.use('/', userRoutes, loginRoute);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
