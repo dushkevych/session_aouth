@@ -1,5 +1,5 @@
-Запуск сервера - npm run start
+Запуск сервера - npm run server
 
-Запуск сервера в дев режиме (nodemon) - npm run start:dev 
+Запуск сервера в дев режиме (nodemon) - npm run server:dev 
 
-Компиляция JSX в реакт - npx webpack
+Запуск реакт npm run front
