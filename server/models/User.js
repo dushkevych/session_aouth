@@ -4,16 +4,21 @@ const { Schema, model } = require('mongoose');
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true
+    lowercase: true,
+    required: [true, "can`t be blank"]
   },
   email: {
     type: String,
-    required: true,
+    lowercase: true,
+    required: [true, "can't be blank"],
+    match: [/\S+@\S+\.\S+/, 'is invalid'],
     unique: true
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "can`t be blank"]
+    // HAVE TO ADD PASSWORD VALIDATION
+    
   },
 }, {timestamps: true});
 
