@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 
 const dbConnect = require('../server/config/db-connection');
+
 const userRoutes = require('./routes/users');
 const loginRoute = require('./routes/login')
 
@@ -16,6 +17,9 @@ app.use('/', express.static('./dist', {
 }))
 
 app.use('/', userRoutes, loginRoute);
+
+
+app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 // catch error and forward to error handler
 app.use((req, res, next) => {
@@ -34,7 +38,5 @@ app.use((err, req, res, next) => {
     }
   });
 });
-
-app.listen(port, () => console.log(`App listening on port ${port}!`))
 
 module.exports = app;
