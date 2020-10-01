@@ -1,14 +1,13 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default class Login extends React.Component {
-    constructor() {
-        super()
-        let loggedIn = false;
+    constructor(props) {
+        super(props)
+        
         this.state = {
             username: "",
             password: "",
-            loggedIn
         }
         this.onFormSubmit = this.onFormSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
@@ -16,11 +15,7 @@ export default class Login extends React.Component {
 
     onFormSubmit(e) {
         e.preventDefault();
-
-        if (this.state.username === "a" && this.state.password === "a") {
-            localStorage.setItem("token", "valentyn")
-            this.setState({ loggedIn: true })
-        }
+        console.log(this.state);
     }
     onChange(e) {
         this.setState({
@@ -28,14 +23,15 @@ export default class Login extends React.Component {
         })
     }
 
+    redirectToSignUp() {
+        //
+    }
 
     render() {
-        if(this.state.loggedIn){
-            return <Redirect to="/admin" />
-        }
+
         return (
             <div>
-                <form onSubmit={this.onFormSubmit} >
+                <form>
                     <input
                         type="text"
                         name="username"
@@ -53,8 +49,16 @@ export default class Login extends React.Component {
                         onChange={this.onChange}
                     />
                     <br />
-                    <input type='submit' />
+                    <button
+                    type="submit"
+                    className="btn btn-primary"
+                    onClick={this.onFormSubmit}
+                    >Submit</button>
                 </form>
+                <div>
+                    <span>Dont have a accounct?</span>
+                    <Link to="/signup" >Sign Up</Link>
+                </div>
             </div>
         );
     }
