@@ -1,18 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
-import Admin from './components/Admin';
-import Login from './components/Login';
-import Logout from './components/Logout';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Login from './components/auth/Login';
+import SignUp from './components/auth/SignUp';
 
 function App() {
 
   return (
-    <Router>
+    <Router> 
       <div>
         <Switch >
-          <Route exact path="/" component={Login} />
-          <Route path="/admin" component={Admin} />
-          <Route path="/logout" component={Logout} />
+          <Route exact path="/login" component={Login} />
+          
+          <Route path="/signup" component={SignUp} />
         </Switch>
       </div>
     </Router>
