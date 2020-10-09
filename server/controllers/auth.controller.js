@@ -1,10 +1,19 @@
 const config = require("../config/auth.config");
-const db = require("../models");
-const User = db.user;
-const Role = db.role;
+const User = require("../models/User")
+
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+
+exports.signup = (req, res) => {
+  const user = new User({
+    username: req.body.username,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 8)
+  });
+};
+
+
 
 exports.signin = (req, res) => {
   User.findOne({
@@ -36,18 +45,6 @@ exports.signin = (req, res) => {
       var token = jwt.sign({ id: user.id }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
-
-      var authorities = [];
-
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
-      }
-      res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        roles: authorities,
-        accessToken: token
-      });
+      res.status(200).send();
     });
 };
