@@ -7,7 +7,7 @@ const verifyToken = async (req, res, next) => {
       
       if (!token) {
         return res.status(403).send({ message: "No token provided!" });
-        }
+        git }
  
   jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
@@ -22,7 +22,7 @@ const verifyToken = async (req, res, next) => {
     throw err;
   };
 
-const authJwt = {
-  verifyToken
-};
-module.exports = authJwt;
+}
+
+
+module.exports = verifyToken 

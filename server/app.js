@@ -11,13 +11,22 @@ const loginRoute = require('./routes/login')
 //DB Config
 dbConnect()
 
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
 //routes
-app.use('/', express.static('./dist', {
-  index: "index.html"
-}))
+// app.use('/', express.static('./dist', {
+//   index: "index.html"
+// }))
+app.use(function(req, res, next) {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+});
 
 app.use('/', userRoutes, loginRoute);
-
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 
@@ -38,6 +47,5 @@ app.use((err, req, res, next) => {
     }
   });
 });
-
 
 module.exports = app;

@@ -1,25 +1,20 @@
 const config = require("../config/auth.config");
 const User = require("../models/User")
 
-
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   const user = new User({
-    username: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8)
   });
 };
 
-
-
 exports.signin = (req, res) => {
   User.findOne({
     username: req.body.username
   })
-    .populate("roles", "-__v")
     .exec((err, user) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -30,7 +25,7 @@ exports.signin = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      var passwordIsValid = bcrypt.compareSync(
+      const passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password
       );
@@ -42,9 +37,17 @@ exports.signin = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      const token = jwt.sign({ id: user.id, email: user.email }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
-      res.status(200).send();
+      res.status(200).send({
+        id: user._id,
+        email: user.email,
+        accessToken: token
+      });
     });
+};
+
+exports.dashboard = (req, res) => {
+  res.status(200).send("Dashboard Content.");
 };

@@ -1,26 +1,9 @@
 const User = require("../models/User")
 
-const checkDuplicateUsernameOrEmail = async (req, res, next) => {
-    // Username
-    try{
-        const user = await User.findOne({
-            username: req.body.username
-          });
-        user.exec((err, user) => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
-        
-            if (user) {
-              res.status(400).send({ message: "Failed! Username is already in use!" });
-              return;
-            };
-        });
-        
+const checkDuplicateEmail = async (req, res, next) => {
+    try{         
 
-    // Email
-    const email = await User.findOne({
+      const email = await User.findOne({
       email: req.body.email
     });
     email.exec((err, user) => {
@@ -43,8 +26,4 @@ const checkDuplicateUsernameOrEmail = async (req, res, next) => {
   };
 }; 
 
-const verifySignUp = {
-  checkDuplicateUsernameOrEmail
-};
-
-module.exports = verifySignUp;
+module.exports = checkDuplicateEmail;
