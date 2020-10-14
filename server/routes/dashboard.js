@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs");
 const { Router } =  require('express');
 const router = Router();
 
+// @todo тут по сути в пути "auth" не нужен
 router.get("/api/auth/dashboard", verifyToken, controller.dashboard);
 
 module.exports = router;

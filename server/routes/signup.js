@@ -21,8 +21,12 @@ try{
   }
 
   //Check for existing user
-  const user = await User.findOne({ email }); 
-  if (user) return res.status(400).json({ msg: 'User allready exists '});
+  // @todo везде если обращаешься к модели, и хочешь получить promise назад, хорошая практика писать "exec()" вконце
+  const user = await User.findOne({ email }).exec(); 
+
+  if (user) { 
+    return res.status(400).json({ success: false, message: 'User allready exists '});
+  }
 
   const newUser = new User({
     username,
