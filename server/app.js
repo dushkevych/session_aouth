@@ -19,8 +19,6 @@ app.use('/api/auth', require('./routes/signup'));
 // global error handler
 app.use(require('./middleware/error-handler'));
 
-//app.listen(port, () => console.log(`App listening on port ${port}!`));
-
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 3000;
 const server = app.listen(port, function () {
