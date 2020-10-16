@@ -10,13 +10,13 @@ const router = Router();
  * @access  Private
  */
 
-router.get('/users', async (req, res) => {
+router.get('/users', async (req, res, next) => {
   try {
-    const users = await User.find();
-    if (!users) throw Error('No users exist');
-    res.json(users);
+    const users = await User.find().exec();
+
+    return res.json({success: true, users});
   } catch (e) {
-    res.status(400).json({ msg: e.message });
+    return next(e);
   }
 });
 

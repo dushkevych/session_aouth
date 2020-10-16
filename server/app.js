@@ -6,7 +6,6 @@ require('dotenv').config();
 const cors = require("cors");
 app.use(cors({ origin: ["http://localhost:3001", "http://localhost:3000"] }) );
 
-
 //Bodyparser middleware
 app.use(express.json());
 
@@ -16,6 +15,7 @@ dbConnect()
 
 //routes
 app.use('/api/auth', require('./routes/signup'));
+app.use('/api/auth', require('./routes/signin'));
 
 
 // global error handler

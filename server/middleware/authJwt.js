@@ -3,25 +3,25 @@ const config = require("../config/auth.config.js");
 
 const verifyToken = async (req, res, next) => {
   try {
-      let token = await req.headers["x-access-token"];
+      const token = await req.headers["x-access-token"];
       
       if (!token) {
-        return res.status(403).send({ message: "No token provided!" });
-        git }
- 
-  jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: "Unauthorized!" });
-        }
-        req.userId = decoded.id;
-        next();
-    });
+        return res.status(403).send({ message: "Missing token" });
+      }
+    
+    // тут работает синхронно функция!  
+    jwt.verify(token, config.secret);
 
   } catch (err) {
-    console.log('DB CONNECTION ERROR');
-    throw err;
-  };
+    if(err.name === 'TokenExpiredError') {
+      return res.status(403).json({success: false, message: 'Token expired'});
+    }
 
+    if(err.name === 'JsonWebTokenError') {
+      return res.status(403).json({success: false, message: 'Invalida token provided'});
+    }
+    return next(err);
+  };
 }
 
 

@@ -9,12 +9,12 @@ const bcrypt = require("bcryptjs");
 const { Router } =  require('express');
 const router = Router();
 
-//@route   POST /api/auth/dashboard
+//@route   POST /api/dashboard
 //@desc    Access private data after signin or signup
 //@access  Private
 
 // @todo тут по сути в пути "auth" не нужен
-router.get("/api/auth/dashboard", verifyToken, controller.dashboard);
+router.get("/api/dashboard", verifyToken, controller.dashboard);
 
 module.exports = router;
 
