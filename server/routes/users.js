@@ -1,16 +1,16 @@
 const { Router } =  require('express');
+const router = Router();
+
+const auth = require('../middleware/auth')
+
 // User Model
 const User = require('../models/User');
 
-const router = Router();
+//@route   GET api/users
+//@desc    Get all users
+//@access  Private
 
-/**
- * @route   GET api/users
- * @desc    Get all users
- * @access  Private
- */
-
-router.get('/users', async (req, res, next) => {
+router.get('/users', auth, async (req, res, next) => {
   try {
     const users = await User.find().exec();
 
