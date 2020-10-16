@@ -14,8 +14,9 @@ const dbConnect = require('../server/config/db-connection');
 dbConnect()
 
 //routes
-app.use('/api/auth', require('./routes/signup'));
-app.use('/api/auth', require('./routes/signin'));
+app.use('/api', require('./routes/signup'));
+app.use('/api', require('./routes/signin'));
+app.use('/api', require('./routes/user'));
 app.use('/api', require('./routes/users'));
 
 
