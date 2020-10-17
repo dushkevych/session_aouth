@@ -2,8 +2,7 @@ const express = require('express');
 const router =  express.Router();
 
 const auth = require('../middleware/auth')
-// User Model
-const User = require('../models/User');
+const controller = require("../controllers/user-controller");
 
 /**
  * @route   GET api/user
@@ -11,18 +10,6 @@ const User = require('../models/User');
  * @access  Private
  */
 
-router.get('/user', auth, async (req, res, next) => {
-  try {
-    const { id } = req.user;
-
-    console.log(req)
-
-    const user = await User.findById(id).select('-password').exec();
-
-    return res.json({success: true, user});
-  } catch (e) {
-    return next(e);
-  }
-});
+router.get('/user', auth, controller.user);
 
 module.exports = router;
