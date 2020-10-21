@@ -10,5 +10,4 @@ const controller = require("../controllers/users-controller");
 
 router.get('/users', auth, controller.users );
 
-//module.exports.default = router;
 module.exports = router;

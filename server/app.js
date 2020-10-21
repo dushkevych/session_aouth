@@ -19,7 +19,6 @@ app.use('/api', require('./routes/signin'));
 app.use('/api', require('./routes/user'));
 app.use('/api', require('./routes/users'));
 
-
 // global error handler
 app.use(require('./middleware/error-handler'));
 

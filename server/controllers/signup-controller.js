@@ -6,10 +6,10 @@ const User = require('../models/User');
 
 exports.signup = async (req, res, next) => {
     try{
-        const { username, email, password } = req.body;
+        const { email, firstName, lastName, password } = req.body;
     
       //Simple validation
-      if (!username || !email || !password ) {
+      if (!email || !firstName || !lastName || !password ) {
         return res.status(400).json({ msg: 'Please enter all fields'});
       }
     
@@ -22,18 +22,19 @@ exports.signup = async (req, res, next) => {
       }
     
       const newUser = new User({
-        username,
+        firstName,
+        lastName,
         email,
         password: bcrypt.hashSync(password, 10)
       });
            
       await newUser.save();
        
-      const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 86400})  
+      const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 86400}); 
       
-      res.json({ message: "User was registered successfully!",token, newUser})
+      res.json({ message: "User was registered successfully!",token, newUser});
     
       } catch(err) {
         next(err)
       }
-    };
+    }

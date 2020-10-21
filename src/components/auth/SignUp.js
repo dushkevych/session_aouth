@@ -22,7 +22,7 @@ export default class SignUp extends React.Component {
         console.log(this.state);
         const {email, firstName, lastName, password} = this.state
         console.log('after const declared', email);
-        axios.post('http://localhost:3001/api/auth/signup', {
+        axios.post('http://localhost:3001/api/signup', {
             email,
             firstName,
             lastName,
