@@ -2,13 +2,6 @@ const { Schema, model } = require('mongoose');
 
 // Create Schema
 const UserSchema = new Schema({
-  email: {
-    type: String,
-    lowercase: true,
-    required: [true, "can't be blank"],
-    match: [/\S+@\S+\.\S+/, 'is invalid'],
-    unique: true
-  },
   firstName: {
     type: String,
     lowercase: true,
@@ -18,6 +11,13 @@ const UserSchema = new Schema({
     type: String,
     lowercase: true,
     required: [true, "can`t be blank"]
+  },
+  email: {
+    type: String,
+    lowercase: true,
+    required: [true, "can't be blank"],
+    match: [/\S+@\S+\.\S+/, 'is invalid'],
+    unique: true
   },
   password: {
     type: String,

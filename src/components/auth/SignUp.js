@@ -33,8 +33,7 @@ export default class SignUp extends React.Component {
             console.log(result.data);
         });
     }
-    
-    
+        
     onChange(e) {
         this.setState({
             [e.target.name]: e.target.value

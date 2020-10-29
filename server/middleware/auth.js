@@ -2,15 +2,21 @@ const jwt = require('jsonwebtoken');
 
 const auth = async (req, res, next) => {
     try {
-        const token = await req.headers["x-access-token"];
+
+       // const {userId} =await req.session;
+        console.log('1',req.session.id)
+        // console.log('2',req.sessionId)
+        console.log('3',req.session.userId)
+        //const token = await req.headers["x-access-token"];
 
         //Check for token
-        if (!token) {
-            return res.status(401).json({ msg: 'No token, authorisation denied'})
+        if (!req.session.userId) {
+            //return res.status(401).json({ message: 'No token, authorisation denied'})
+            return res.status(401).json({ message: 'Session is not active, authorization denied'})
         };
-
+        
         //Verify token, Add user from payload
-        req.user = jwt.verify(token, process.env.JWT_SECRET);
+        //req.user = jwt.verify(token, process.env.JWT_SECRET);
         
         next();
 

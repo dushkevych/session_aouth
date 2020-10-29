@@ -6,11 +6,11 @@ const User = require('../models/User');
 
 exports.signup = async (req, res, next) => {
     try{
-        const { email, firstName, lastName, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
     
       //Simple validation
-      if (!email || !firstName || !lastName || !password ) {
-        return res.status(400).json({ msg: 'Please enter all fields'});
+      if (!firstName || !lastName || !email ||!password ) {
+        return res.status(400).json({ message: 'Please enter required fields'});
       }
     
       //Check for existing user
@@ -29,10 +29,14 @@ exports.signup = async (req, res, next) => {
       });
            
       await newUser.save();
+
+      console.log('newUser', newUser)
        
-      const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 86400}); 
+      //const token = jwt.sign({id: newUser.id}, process.env.JWT_SECRET, {expiresIn: 86400});
+      req.session.userid = newUser.id
       
-      res.json({ message: "User was registered successfully!",token, newUser});
+      console.log('req.session.userid:', req.session.userid )
+      res.json({ message: "User was registered successfully!", newUser});
     
       } catch(err) {
         next(err)

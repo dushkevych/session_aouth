@@ -10,14 +10,14 @@ exports.signin = async (req, res, next) => {
     
       //Simple validation
       if (!email || !password ) {
-        return res.status(400).json({ msg: 'Please enter all fields'});
+        return res.status(400).json({ message: 'Please enter required fields'});
       }
     
       //Check for existing user
       const user = await User.findOne({ email }).exec(); 
       
       if (!user) {
-        return res.status(400).json({ msg: 'User does not exist '});
+        return res.status(400).json({ message: 'User does not exist '});
       }
     
       //Validate password
@@ -26,10 +26,13 @@ exports.signin = async (req, res, next) => {
       if (!isMatch) {
         return res.status(400).json({ success: false, message: 'Invalid credentials' });    
       }
-    
-      const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 86400});
+
+      req.session.userId = user.id
+
+      console.log('user', user)
+      //const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 86400});
       
-      res.json({token, user})
+      res.json({/*token*/ user})
     
       } catch(err) {
         next(err)
