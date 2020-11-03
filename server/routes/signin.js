@@ -9,9 +9,3 @@ const controller = require("../controllers/signin-controller");
 router.post('/signin', controller.signin)
 
 module.exports = router;
-
-// app.post('/login',
-//   passport.authenticate('local', { successRedirect: '/',
-//                                    failureRedirect: '/login',
-//                                    failureFlash: true })
-// );
