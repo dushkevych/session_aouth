@@ -28,6 +28,8 @@ exports.signin = async (req, res, next) => {
       }
 
       //const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 86400});
+      req.session.user = user
+
       
       res.json({/*token*/ user})
     

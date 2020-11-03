@@ -29,6 +29,8 @@ exports.signup = async (req, res, next) => {
       });
            
       await newUser.save();
+
+      req.session.user = newUser;
      
       res.json({ message: "User was registered successfully!", newUser});
 
