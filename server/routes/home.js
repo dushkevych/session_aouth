@@ -1,15 +1,12 @@
 const express = require('express');
 const router =  express.Router();
 
-//home page
-router.get('/home', async (req, res, next) => {
-    try {
-        
-    res.json({ message: "You are on a home page, please sign in or sign up"});
-          
-    } catch(err) {
-        next(err)
-      }
-    })
+const controller = require("../controllers/home-controller");
+
+//route   GET /api/home"
+//desc    Home Page
+//access  Public
+
+router.get('/home', controller.home)
   
 module.exports = router;

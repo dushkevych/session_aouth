@@ -47,9 +47,10 @@ app.use(session(sessionOptions));
 app.use('/api', require('./routes/home'));
 app.use('/api', require('./routes/signup'));
 app.use('/api', require('./routes/signin'));
+app.use('/api', require('./routes/logout'));
 app.use('/api', require('./routes/user'));
 app.use('/api', require('./routes/users'));
-app.use('/api', require('./routes/logout'));
+
 
 // global error handler
 app.use(require('./middleware/error-handler'));

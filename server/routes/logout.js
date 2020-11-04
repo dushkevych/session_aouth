@@ -1,20 +1,12 @@
 const express = require('express');
 const router =  express.Router();
 
-//logout user
-router.post('/logout', async (req, res, next) => {
-    try {
-        req.session.destroy();   
-        
-        res.clearCookie('sessionId');
-        res.redirect('/api/home');
-          
-      } catch(err) {
-          if(err) {
-              return res.redirect('/user').json({success: false, message: 'Session is not destroyed'});
-            }
-            return next(err);
-          };
-      })
+const controller = require("../controllers/logout-controller");
+
+//route   POST /api/logout
+//desc    Logs user out and redirects to public page /api/home"
+//access  Private
+
+router.post('/logout', controller.logout)
   
-  module.exports = router;
+module.exports = router;

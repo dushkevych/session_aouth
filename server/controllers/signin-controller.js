@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 // User Model
 const User = require('../models/User');
@@ -27,11 +26,9 @@ exports.signin = async (req, res, next) => {
         return res.status(400).json({ success: false, message: 'Invalid credentials' });    
       }
 
-      //const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 86400});
       req.session.user = user
-
-      
-      res.json({/*token*/ user})
+     
+      res.json({user})
     
       } catch(err) {
         next(err)

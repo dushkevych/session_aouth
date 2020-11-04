@@ -3,9 +3,9 @@ const router =  express.Router();
 
 const controller = require('../controllers/signup-controller');
 
-//@route   POST /api/auth/signup"
-//@desc    Register new user
-//@access  Public
+//route   POST /api/signup"
+//desc    Register new user
+//access  Public
 
 router.post('/signup', controller.signup)
 

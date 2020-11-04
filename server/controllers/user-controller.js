@@ -4,7 +4,6 @@ exports.user = async (req, res, next) => {
     try {
       const { email } = req.body;
 
-      //const user = await User.findOne(email).select('-password').exec();
       const user = await User.findOne({ email }).select('-password').exec(); 
 
       return res.json({success: true, user});
