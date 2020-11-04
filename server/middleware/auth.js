@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const mongo = require('../app');
 
 const auth = async (req, res, next) => {
     try {
