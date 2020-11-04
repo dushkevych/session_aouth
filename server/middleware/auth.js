@@ -1,10 +1,10 @@
 const auth = async (req, res, next) => {
     try {
 
-        const { user } = req.session;
+        const { userId } = req.session;
          
         //Check for session
-        if (!user) {
+        if (!userId) {
             return res.status(401).json({ message: 'Session is not active, authorization denied'})
         };
         
