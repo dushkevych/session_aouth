@@ -5,8 +5,9 @@ const User = require('../models/User');
 
 exports.signup = async (req, res, next) => {
     try{
+
         const { firstName, lastName, email, password } = req.body;
-    
+  
       //Simple validation
       if (!firstName || !lastName || !email ||!password ) {
         return res.status(400).json({ message: 'Please enter required fields'});
