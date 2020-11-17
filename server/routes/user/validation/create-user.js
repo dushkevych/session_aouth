@@ -1,4 +1,4 @@
-const { check, validationResult, /*body, param, query, isEmail, isLength,  withMessage*/ } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 exports.signUpValidationChain = [
     check('firstName')

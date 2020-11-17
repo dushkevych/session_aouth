@@ -50,6 +50,8 @@ app.use('/api', require('./routes/signin'));
 app.use('/api', require('./routes/logout'));
 app.use('/api', require('./routes/user'));
 app.use('/api', require('./routes/users'));
+//reset password
+app.use('/api', require('./routes/reset-password'));
 
 
 // global error handler
