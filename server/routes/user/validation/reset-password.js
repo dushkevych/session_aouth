@@ -1,4 +1,4 @@
-const { check, validationResult, /*body, param, query, isEmail, isLength,  withMessage*/ } = require('express-validator');
+const { check, validationResult, } = require('express-validator');
 
 exports.recoverEmail = [
 
@@ -20,7 +20,7 @@ exports.resetPassword = [
       .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
       .trim().escape()
       .withMessage('password must be at least 8 characters long, contain uppercase letters, lowercase letters, numbers, can contain special characters'),
-    check('confirmPassword', 'Passwords do not match').custom((value, {req}) => (value === req.body.password))
+    check('confirmPassword').custom((value, {req}) => (value === req.body.password))
       .withMessage('Passwords do not match')
     
     ]

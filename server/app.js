@@ -53,6 +53,8 @@ app.use('/api', require('./routes/users'));
 //reset password
 app.use('/api', require('./routes/reset-password'));
 
+//google strategy
+app.use('/api', require('./google-strategy'))
 
 // global error handler
 app.use(require('./middleware/error-handler'));
