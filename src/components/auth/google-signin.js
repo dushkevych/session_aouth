@@ -24,7 +24,7 @@ function GoogleSignin() {
 // }
 
   return (
-        <div className = 'col-md-6 offset-md-3'>
+        <div>
          
             {/* <GoogleLogin
                 clientId={CLIENT_ID}
