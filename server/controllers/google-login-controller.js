@@ -3,9 +3,9 @@ const bcrypt = require('bcryptjs');
 
 const {OAuth2Client} = require('google-auth-library');
 const oAuth2Client = new OAuth2Client(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    process.env.REDIRECT_URL,
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_URL,
   );
 
 exports.googleLogin = async (req, res, next) => {
@@ -54,6 +54,7 @@ exports.googleLoginCallback = async (req, res, next) => {
                 lastName: family_name,
                 email,
                 googleId: sub,
+                facebookId: null,
                 password: bcrypt.hashSync(process.env.JWT_SECRET, 10)
               });
               await newUser.save();

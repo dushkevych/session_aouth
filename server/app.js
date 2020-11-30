@@ -54,8 +54,8 @@ app.use('/api', require('./routes/users'));
 app.use('/api', require('./routes/reset-password'));
 
 //google strategy
-app.use('/api', require('./routes/google-login'))
-
+app.use('/api', require('./routes/google-login'));
+app.use('/api', require('./routes/facebook-login'));
 // global error handler
 app.use(require('./middleware/error-handler'));
 

@@ -25,6 +25,10 @@ const UserSchema = new Schema({
   googleId: {
     type: String,
     required: false
+  },
+  facebookId: {
+    type: String,
+    required: false
   }
 }, {timestamps: true});
 
