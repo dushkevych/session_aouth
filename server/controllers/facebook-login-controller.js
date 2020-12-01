@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-
+const generator = require('generate-password');
 const axios = require('axios');
 
 exports.facebookLogin = async (req, res, next) => {
@@ -21,10 +21,10 @@ exports.facebookLogin = async (req, res, next) => {
 
 exports.facebookLoginCallback = async (req, res, next) => {
     try {
-        //Check which way is more reliable - code based or at once token based???
+        //which way is more reliable - code based or token based???
         const code = req.query.code;
+        
         //Get an access token based on our OAuth code
-
         const tokenRequest = await axios.get('https://graph.facebook.com/v9.0/oauth/access_token', {
             params : {
                 client_id:process.env.FACEBOOK_CLIENT_ID,
@@ -45,21 +45,22 @@ exports.facebookLoginCallback = async (req, res, next) => {
                 },
             });
           
-        //   const { data } = userRequest
-        //   console.log(data); // { id, email, first_name, last_name }
-          
           const { id, email, first_name, last_name } = userRequest.data
+          
           // check if the user is already in database:
           const user = await User.findOne({ email }).exec(); 
          
           if (user) {
-              //update users profile in db by adding gogggleId 
-              user.facebookId = id;
-              await user.save();
+              //update users profile in db by adding facebookeId 
+              if (!user.facebookId) {
+                user.facebookId = id;
+                await user.save();
+              }
+                          
               //establish an authenticated session for the user:
               req.session.userId = user._id;
             } else {
-              // if there is no user create one, save in DB,
+              // if no user create one, save in DB,
               const newUser = new User({
                   firstName: first_name,
                   lastName: last_name,
@@ -70,11 +71,15 @@ exports.facebookLoginCallback = async (req, res, next) => {
                 });
                 await newUser.save();
               // establish an authenticated session for the newUser
-                req.session.userId = newUser._id;
+
+                const newUserId = await User.findOne({ email }).select('_id').exec()
+                console.log('newUserid:', newUserId) 
+                req.session.userId = newUserId; 
+                console.log('req.session.userId:', req.session.userId) 
           }
   
           res.redirect('/api/user')
       } catch (err){
           next(err)
       }
-    }
+    };

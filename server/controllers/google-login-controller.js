@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const generator = require('generate-password');
 
 const {OAuth2Client} = require('google-auth-library');
 const oAuth2Client = new OAuth2Client(
@@ -43,10 +44,14 @@ exports.googleLoginCallback = async (req, res, next) => {
        
         if (user) {
             //update users profile in db by adding gogggleId 
+            if (!user.googleId) {
             user.googleId = sub;
             await user.save();
+            }
+        
             //establish an authenticated session for the user:
             req.session.userId = user._id;
+            console.log(req.session.userId)
           } else {
             // if there is no user create one, save in DB,
             const newUser = new User({
@@ -59,7 +64,10 @@ exports.googleLoginCallback = async (req, res, next) => {
               });
               await newUser.save();
             // establish an authenticated session for the newUser
-              req.session.userId = newUser._id;
+            const newUserId = await User.findOne({ email }).select('_id').exec()
+            console.log('newUserid:', newUserId) 
+            req.session.userId = newUserId; 
+            console.log('req.session.userId:', req.session.userId) 
         }
 
         res.redirect('/api/user')
