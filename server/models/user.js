@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 // Create Schema
-const UserSchema = new Schema({
+const userSchema = new Schema({
   firstName: {
     type: String,
     required: [true, "can`t be blank"]
@@ -19,7 +19,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, "can`t be blank"]
+    // required: [true, "can`t be blank"]
     // HAVE TO ADD PASSWORD VALIDATION
   },
   googleId: {
@@ -28,8 +28,9 @@ const UserSchema = new Schema({
   },
   facebookId: {
     type: String,
-    required: false
-  }
+    required: false,
+    default: ''
+  } 
 }, {timestamps: true});
 
-module.exports = model('Users', UserSchema);
+module.exports = model('Users', userSchema);

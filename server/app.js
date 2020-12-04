@@ -36,10 +36,10 @@ const sessionOptions = {
   
   cookie: {
     maxAge: 1000 * 60 * 60 * 2, //two hours
-    sameSite: true,
-    secure: process.env.NODE_ENV === 'production' ? true : false,
+    sameSite: process.env.NODE_ENV === 'production' ? true : 'lax',
+    secure: process.env.NODE_ENV === 'production' ? true : false
     }
-  }
+  };
 
 app.use(session(sessionOptions));
 

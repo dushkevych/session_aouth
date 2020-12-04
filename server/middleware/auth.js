@@ -1,20 +1,24 @@
+const Session = require('../models/session');
 const auth = async (req, res, next) => {
-    try {
+    try {        
+        const sessionId = req.sessionID
+        const session = await Session.findOne({_id: sessionId}).exec();
 
-        const { userId } = req.session;
-        console.log('USER ID:', userId)
-        console.log('SESSION:',req.session )
-        console.log('req.session.userId:',req.session.userId )
-         
+        console.log('SESSIONID' ,sessionId);
+        console.log('SESSION' ,session);
+        const { id } = req.session
+        console.log('req.session.id:', id);
+        console.log('req.session.userId:', req.session.userId);
+
         //Check for session
-        if (!userId) {
+        if (!id) {
             return res.status(401).json({ message: 'Session is not active, authorization denied'})
         };
         
-        next();
+        return next();
 
     } catch (err) {
-        next(err)
+        return next(err)
         }
     };
 

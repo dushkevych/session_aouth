@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-const generator = require('generate-password');
 const axios = require('axios');
 
 exports.facebookLogin = async (req, res, next) => {
@@ -16,8 +15,6 @@ exports.facebookLogin = async (req, res, next) => {
         next(err)
     }
 };
-
-
 
 exports.facebookLoginCallback = async (req, res, next) => {
     try {
@@ -65,20 +62,13 @@ exports.facebookLoginCallback = async (req, res, next) => {
                   firstName: first_name,
                   lastName: last_name,
                   email,
-                  googleId: null,
                   facebookId: id,
-                  password: bcrypt.hashSync(process.env.JWT_SECRET, 10)
                 });
-                await newUser.save();
+                const {_id: newUserId} = await newUser.save();;
               // establish an authenticated session for the newUser
-
-                const newUserId = await User.findOne({ email }).select('_id').exec()
-                console.log('newUserid:', newUserId) 
                 req.session.userId = newUserId; 
-                console.log('req.session.userId:', req.session.userId) 
           }
-  
-          res.redirect('/api/user')
+          return res.redirect('/api/user')
       } catch (err){
           next(err)
       }

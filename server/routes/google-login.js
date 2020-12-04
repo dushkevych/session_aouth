@@ -3,6 +3,8 @@ const router =  express.Router();
 
 const controller = require('../controllers/google-login-controller');
 
+const auth = require('./../middleware/auth')
+
 //route   GET /api/google/login"
 //access  Public
 router.get('/google/login', controller.googleLogin );
