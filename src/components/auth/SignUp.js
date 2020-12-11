@@ -17,23 +17,29 @@ export default class SignUp extends React.Component {
         this.onChange = this.onChange.bind(this)
     }
 
-    onFormSubmit(e) {
+    async onFormSubmit(e) {
         e.preventDefault();
         console.log(this.state);
         const {email, firstName, lastName, password} = this.state
         console.log('after const declared', email);
-        axios.post('http://localhost:3001/api/signup', {
-            email,
-            firstName,
-            lastName,
-            password,
-        })
-        .then((result) => {
-            console.log(result);
-            console.log(result.data);
-        });
-    }
-        
+        try {
+            await axios.post('http://localhost:3001/api/signup', {
+                email,
+                firstName,
+                lastName,
+                password,
+            })
+            console.log('password', password )
+            
+            await axios.get('http://localhost:3001/api/user')
+    
+    } catch (error){
+        return error;
+        }
+
+
+    }        
+      
     onChange(e) {
         this.setState({
             [e.target.name]: e.target.value
