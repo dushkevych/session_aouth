@@ -1,43 +1,30 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
+export default class SignIn extends Component {
 
-export default class SignIn extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            email: "",
-            password: "",
+    state = {
+        email: "",
+        password: "",
         }
-        this.onFormSubmit = this.onFormSubmit.bind(this)
-        this.onChange = this.onChange.bind(this)
-    }
 
-    async onFormSubmit(e) {
+    onFormSubmit = async (e)=> {
         e.preventDefault();
-        console.log(this.state);
         const {email, password} = this.state
         try {
             await axios.post('http://localhost:3001/api/signin', {
                 email,
                 password,
             })
-            console.log('password', password )
-            
-            //const result = await axios.get('http://localhost:3001/api/user')
-        
-        } catch (error){
+            console.log('password', password ) 
+            } catch (error){
             return error;
             }
-
-
-
     }
-    onChange(e) {
+    onChange= (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })

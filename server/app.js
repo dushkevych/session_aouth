@@ -35,6 +35,7 @@ const sessionOptions = {
   saveUninitialized: false,
   
   cookie: {
+    domain: "/localhost:3000",
     maxAge: 1000 * 60 * 60 * 2, //two hours
     sameSite: process.env.NODE_ENV === 'production' ? true : 'lax',
     secure: process.env.NODE_ENV === 'production' ? true : false

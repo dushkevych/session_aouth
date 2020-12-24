@@ -4,12 +4,14 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import GoogleSignin from './components/auth/google-signin';
 import FacebookSignin from './components/auth/facebook-signin'
+import { CookiesProvider } from 'react-cookie';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
   return (
+    < CookiesProvider >
     <Router>
       <div>
       
@@ -25,6 +27,7 @@ function App() {
         </Switch>
       </div>
     </Router>
+    </CookiesProvider>
   )
 
 }

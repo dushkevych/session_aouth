@@ -1,27 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 
-export default class SignUp extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
+export default class SignUp extends Component {
+    
+        state = {
             email: "",
             firstName: "",
             lastName: "",
             password: "",
-        }
-        this.onFormSubmit = this.onFormSubmit.bind(this)
-        this.onChange = this.onChange.bind(this)
     }
 
-    async onFormSubmit(e) {
+    onFormSubmit = async(e) => {
         e.preventDefault();
-        console.log(this.state);
         const {email, firstName, lastName, password} = this.state
-        console.log('after const declared', email);
         try {
             await axios.post('http://localhost:3001/api/signup', {
                 email,
@@ -29,25 +22,18 @@ export default class SignUp extends React.Component {
                 lastName,
                 password,
             })
-            console.log('password', password )
-            
-            await axios.get('http://localhost:3001/api/user')
-    
-    } catch (error){
-        return error;
+        } catch (error){
+            return error;
         }
-
-
     }        
       
-    onChange(e) {
+    onChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
     render() {
-
         return (
             <div className="container">
                 <Form>
