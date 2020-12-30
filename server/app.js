@@ -1,25 +1,26 @@
 const express = require('express');
 const app = express();
-
+const fs = require('fs');
+const path = require('path'); 
+const cors = require("cors");
+const session = require('express-session')
+const connectMongo = require('connect-mongo');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-const cors = require("cors");
+const dbConnect = require('../server/config/db-connection');
+
 app.use(cors({ origin: ["http://localhost:3001", "http://localhost:3000"] }) );
 
  //Bodyparser middleware
 app.use(express.json());
 
 //Connect to mongo
-const dbConnect = require('../server/config/db-connection');
 dbConnect()
 
 //session middleware configuration
-const session = require('express-session')
-
-const connectMongo = require('connect-mongo');
 const MongoStore = connectMongo(session);
 
-const mongoose = require('mongoose');
 const connection = mongoose.createConnection(process.env.DB_CONNECTION_URI, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -44,18 +45,20 @@ const sessionOptions = {
 
 app.use(session(sessionOptions));
 
-//routes
-app.use('/api', require('./routes/home'));
-app.use('/api', require('./routes/signup'));
-app.use('/api', require('./routes/signin'));
-app.use('/api', require('./routes/logout'));
-app.use('/api', require('./routes/user'));
-app.use('/api', require('./routes/users'));
-//reset password
-app.use('/api', require('./routes/reset-password'));
-app.use('/api', require('./routes/google-login'));
-app.use('/api', require('./routes/facebook-login'));
-// global error handler
+//Dinamically add routes from routes folder
+fs.readdir('server/routes', (err, files) => {
+  if (err) {
+    throw new Error;
+  } else {
+    files.forEach(file => {
+      if (path.extname(file) == ".js") {
+        app.use("/api", require("./routes/" + file))
+      }
+    });
+  }
+});
+
+//Global error handler
 app.use(require('./middleware/error-handler'));
 
 // start server

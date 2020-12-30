@@ -4,11 +4,13 @@ import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
-export default class SignIn extends Component {
+
+export default class SignIn extends React.Component {
 
     state = {
         email: "",
         password: "",
+        hidden: true,
         }
 
     onFormSubmit = async (e)=> {
@@ -29,6 +31,10 @@ export default class SignIn extends Component {
             [e.target.name]: e.target.value
         })
     }
+
+    toggleShow = () => {
+        this.setState({ hidden: !this.state.hidden });
+      }
 
     redirectToSignUp() {
         //
@@ -53,11 +59,16 @@ export default class SignIn extends Component {
                     <Form.Group>
                         <Form.Label>Password</Form.Label>
                         <Form.Control
-                            type="password"
+                            type={this.state.hidden ? 'password' : 'text'}
                             name="password"
                             placeholder="Password"
                             value={this.state.password}
-                            onChange={this.onChange} />
+                            onChange={this.onChange}
+                            />
+                        <Button
+                            onClick={this.toggleShow}>
+                            Show/Hide                                                     
+                        </Button> 
                     </Form.Group>
                     <Button
                         variant="primary"
