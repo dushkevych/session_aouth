@@ -17,6 +17,9 @@ const userSchema = new Schema({
     match: [/\S+@\S+\.\S+/, 'is invalid'],
     unique: true
   },
+  isEmailVerified: {
+    type: Boolean,
+  },
   password: {
     type: String,
     // required: [true, "can`t be blank"]
