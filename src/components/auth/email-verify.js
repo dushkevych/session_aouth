@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Form, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
+import SimpleSnackbar from './snackbar'
 
 export default class EmailVerify extends Component {
     
@@ -53,6 +54,10 @@ export default class EmailVerify extends Component {
                         Confirm Email
                     </Button>
                 </Form>
+
+                < SimpleSnackbar />
+
+                
 
             </div>
         );

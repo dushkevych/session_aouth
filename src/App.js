@@ -33,7 +33,6 @@ function App() {
     </Router>
     </CookiesProvider>
   )
-
 }
 
 export default App;
