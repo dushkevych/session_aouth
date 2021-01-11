@@ -12,6 +12,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // @access Public
 exports.verifyEmail = async (req, res, next) => {
     try {
+      
       const { email } = req.body;
       const user = await User.findOne({ email }).select('-password').exec();
   

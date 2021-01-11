@@ -14,12 +14,4 @@ router.post('/email/verify', controller.verifyEmail);
 router.get('/email/verify/:token',
     controller.confirmationPage);
 
-// @route POST api/reset/:token
-// @desc Reset Password
-// @access Public
-// router.post('/reset/:token', 
-//   validation.resetPassword,
-//   validation.validate,
-//   controller.resetPassword );
-  
 module.exports = router;
