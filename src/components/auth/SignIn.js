@@ -3,19 +3,45 @@ import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import { isEmail } from "validator";
 
+const initialState = {
+    email: "",
+    password: "",
+    hidden: true,
+    emailError: ""
+    }
 
-export default class SignIn extends React.Component {
+export default class SignIn extends Component {
 
     state = {
         email: "",
         password: "",
         hidden: true,
+        emailError: ""
         }
+
+        validate = () => {
+            let emailError = "";
+
+            if (!isEmail(this.state.email)){
+                emailError = 'Email have to be valid'
+            }
+            
+            if (emailError) {
+                this.setState({emailError});
+                return false;
+            }
+
+            return true;
+        };
 
     onFormSubmit = async (e)=> {
         e.preventDefault();
+        const isValid = this.validate();
         const {email, password} = this.state
+        
+        if (isValid) {
         try {
             await axios.post('http://localhost:3001/api/signin', {
                 email,
@@ -25,11 +51,20 @@ export default class SignIn extends React.Component {
             } catch (error){
             return error;
             }
+
+          this.setState(initialState)  
+        }
     }
-    onChange= (e) => {
+    onChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
+        const isValid = this.validate();
+        if (isValid) {
+            this.setState({
+                emailError: ""
+            })   
+        }
     }
 
     toggleShow = () => {
@@ -54,6 +89,9 @@ export default class SignIn extends React.Component {
                             value={this.state.email}
                             onChange={this.onChange}
                         />
+                        <div style={{ fontSize: 10, color:"red" }} >
+                           {this.state.emailError}
+                        </div>
                     </Form.Group>
 
                     <Form.Group>
@@ -65,6 +103,7 @@ export default class SignIn extends React.Component {
                             value={this.state.password}
                             onChange={this.onChange}
                             />
+
                         <Button
                             onClick={this.toggleShow}>
                             Show/Hide                                                     
@@ -78,7 +117,7 @@ export default class SignIn extends React.Component {
                         Submit
                     </Button>
                 </Form>
-                <span> Dont have a accounct? </span>
+                <span> Dont have an accounct? </span>
                 <Link to="/signup" >Sign Up</Link>
             </div>
         );

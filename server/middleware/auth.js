@@ -4,11 +4,7 @@ const auth = async (req, res, next) => {
         const sessionId = req.sessionID
         const session = await Session.findOne({_id: sessionId}).exec();
 
-        console.log('SESSIONID' ,sessionId);
-        console.log('SESSION' ,session);
         const { id } = req.session
-        console.log('req.session.id:', id);
-        console.log('req.session.userId:', req.session.userId);
 
         //Check for session
         if (!id) {

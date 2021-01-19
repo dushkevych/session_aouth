@@ -26,7 +26,11 @@ exports.signin = async (req, res, next) => {
         return res.status(400).json({ success: false, message: 'Invalid credentials' });    
       }
 
-      req.session.userId = user._id      
+      console.log("USER._id",user._id)
+
+      req.session.userId = user._id 
+      
+      console.log("req.session.userId:", req.session.userId)     
      
       res.json({user})
     

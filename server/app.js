@@ -10,7 +10,11 @@ require('dotenv').config();
 
 const dbConnect = require('../server/config/db-connection');
 
-app.use(cors({ origin: ["http://localhost:3001", "http://localhost:3000"] }) );
+app.use(cors({ 
+  origin: ["http://localhost:3001", "http://localhost:3000"],
+  credentials: true,
+  exposedHeaders: ["set-cookie"] }) 
+      );
 
  //Bodyparser middleware
 app.use(express.json());

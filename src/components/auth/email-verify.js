@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
 import { Form, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -29,10 +28,13 @@ export default class EmailVerify extends Component {
                 snackbarOpen: true,
                 snackbarMessage: message
             })
-            
-            console.log(message)
-       
+         
+     
         } catch (error){
+            this.setState({
+                snackbarOpen: true,
+                snackbarMessage: "something went wrong"
+            })
             return error;
         }
     }        
@@ -75,12 +77,12 @@ export default class EmailVerify extends Component {
                     </Button>
                     
                     <Snackbar
-                    anchorOrigin = {{vertical:'center', horizontal:'center'}}
+                    anchorOrigin = {{vertical:'top', horizontal:'center'}}
                     open = { this.state.snackbarOpen }
-                    autoHideDuration = {4000}
+                    autoHideDuration = { 3000 }
                     onClose = { this.handleClose }
                     message = { this.state.snackbarMessage }
-                    action = {[
+                       action = {[
                         <IconButton
                         key = "close"
                         aria-label="close"
@@ -93,10 +95,6 @@ export default class EmailVerify extends Component {
                     />
      
                 </Form>
-
-               
-           
-
             </div>
         );
     }
