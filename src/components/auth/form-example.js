@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, InputGroup, Col } from 'react-bootstrap';
 import {Formik} from 'formik';
@@ -10,19 +10,22 @@ const schema = yup.object({
     .required('Required'),
   firstName: yup.string()
     .max(15, 'Must be 20 characters or less')
-    .required(),
+    .required('Required'),
   lastName: yup.string()
     .max(15, 'Must be 20 characters or less')
-    .required(),
+    .required('Required'),
   password: yup.string()
     .max(20, 'Must be 20 characters or less')
-    .required().matches(
-    "^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$",
-    "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number, can have special case Characters"
+    .required('Required')
+    .matches( "^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{6,}$",
+    "Must Contain at least 6 Characters, One Uppercase, One Lowercase, One Number, can have special case Characters"
   ),  
 });
 
 function FormExample() {
+
+  const [ visible, setVisible ] = useState("password");
+
   return (
     <Formik
       validationSchema={schema}
@@ -44,9 +47,10 @@ function FormExample() {
         }
     }}
       initialValues={{
+        email: '',
         firstName: '',
         lastName: '',
-        hidden: 'password'
+        password: ''
       }}
     >
       {({
@@ -73,7 +77,7 @@ function FormExample() {
                   name="email"
                   value={values.email}
                   onChange={handleChange}
-                  isInvalid={errors.email} // isInvalid
+                  isInvalid={!!errors.email}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}
@@ -107,22 +111,28 @@ function FormExample() {
 
             <Form.Group as={Col} md="4" controlId="formGroupPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control
-                type={ values.hidden }  //{this.state.hidden ? 'password' : 'text'}
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                isValid={touched.password && !errors.password}
-                id="pass_icon"
-              />
-
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-              <Button 
-                onClick={ () => { values.hidden ==="password" ? values.hidden = "text" : values.hidden = "password" }}
-                >
-                Show/Hide                                                     
-              </Button> 
-
+                <InputGroup>
+                  <Form.Control
+                    type={visible}  //{this.state.hidden ? 'password' : 'text'}
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    isValid={touched.password && !errors.password}
+                    isInvalid={!!errors.password}
+                    id="pass_icon"
+                  />
+                  <InputGroup.Append>
+                    <Button 
+                      variant="outline-secondary"
+                      onClick={ () =>  visible ==="password" ? setVisible("text")  : setVisible("password") } 
+                    > 
+                      Show/Hide
+                    </Button>
+                  </InputGroup.Append>
+                  <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </InputGroup>
             </Form.Group>
               
           <Button type="submit">Submit form</Button>

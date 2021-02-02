@@ -21,9 +21,9 @@ exports.signUpValidationChain = [
     check('password')
       .isLength({ min: 8 }).withMessage('password must be 8 characters')
       //password must be at least 8 characters long, contain uppercase letters, lowercase letters, numbers, can contain special characters
-      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/)
       .trim().escape()
-      .withMessage('password must be at least 8 characters long, contain UPPERCASE LETTERS, lowercase letters, numbers, can contain special characters')
+      .withMessage('password must be at least 6 characters long, contain UPPERCASE LETTERS, lowercase letters, numbers, can contain special characters')
   ]
 
 exports.validateSignUp = (req, res, next) => {
