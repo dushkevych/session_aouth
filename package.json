@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@emotion/core": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
@@ -30,8 +32,10 @@
     "generate-password": "^1.5.1",
     "google-auth-library": "^6.1.3",
     "googleapis": "^65.0.0",
+    "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.7",
+    "npm": "^6.14.11",
     "prop-types": "^15.7.2",
     "query-string": "^6.13.7",
     "react": "^16.13.1",
@@ -43,7 +47,8 @@
     "react-google-login": "^5.1.25",
     "react-material-ui-form-validator": "^2.1.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "yup": "^0.32.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

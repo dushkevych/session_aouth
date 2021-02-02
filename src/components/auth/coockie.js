@@ -1,65 +1,138 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import ReactSession from 'react-client-session';
+import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import { isEmail, isEmpty, isStrongPassword } from "validator";
 
-export default class Cookie extends React.Component {
-  constructor() {
-    super(); 
-    this.state = {
-      username: "",
-      sessionUsername: ""
+const initialState = {
+    email: "",
+    password: "",
+    hidden: true,
+    emailError: "",
+    passwordError:""
     }
-    this.setUsername = this.setUsername.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.clear = this.clear.bind(this);
 
-    ReactSession.setStoreType("cookie");
-  }
+export default class SignIn extends Component {
 
-  setUsername(event) {
-    event.preventDefault();
-    ReactSession.set("username", this.state.username);
+    state = {
+        email: "",
+        password: "",
+        hidden: true,
+        emailError: "",
+        passwordError:"",
 
-    this.setState({
-      sessionUsername: "User Name is: " + ReactSession.get("username")
-    });
-  }
+        }
 
-  clear(event) {
-    event.preventDefault();
-    ReactSession.remove("username");
+        validate = () => {            
+            let emailError = "";
+            let passwordError = "";
 
-    this.setState({
-      sessionUsername: "User Name is: " + ReactSession.get("username"),
-      message: "Cookie cleared!"
-    });
-  }
+            if (isEmpty(this.state.email)){
+                return emailError = 'E-mail is required*'
+            };
 
-  handleChange(event) {
-    const value = event.target.value;
-    const name = event.target.name;
-    this.setState({
-      [name]: value,
-    });
-  }
+            if (!isEmail(this.state.email)){
+                return emailError = 'Valid e-mail is required*'
+            };
 
-  render() {
-    return (
-      <div>
-      <p>{this.state.sessionUsername}</p>
+            const passwordCheck = isStrongPassword(this.state.password); 
+            if (passwordCheck) {
+                return passwordError = passwordCheck
+            };
 
-      <h3>Client Session store with cookie persistence</h3>
+            if (emailError ) {
+                this.setState({emailError});
+                return false;
+            }
+            return true;
+        };
 
-      <p>Add a username and display it  <Link to="/">Back</Link></p>
+    onFormSubmit = async (e)=> {   
+        e.preventDefault();
+        const isValid = this.validate();
+        const {email, password} = this.state
+        
+        if (isValid) {
+        try {
+            await axios.post('http://localhost:3001/api/signin', {
+                email,
+                password,
+            })
+            } catch (error){
+            return error;
+            }
 
-      <input type="text" name="username" value={this.state.username} onChange={this.handleChange} placeholder="Set a username" />
-      <button type="submit" onClick={this.setUsername}>Add to Session(cookie)</button>
+          this.setState(initialState)  
+        }
+    }
+    onChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+        
+        let isValid = this.validate();
+        
+        if (isValid) {
+            this.setState({
+                emailError: "",
+             //   passwordError: ""
+                })   
+            }
+        };
 
-      <p>{this.state.sessionUsername}</p>
+    toggleShow = () => {
+        this.setState({ hidden: !this.state.hidden }); // переписать на колбек => состояние зависит от предидущего состояни
+      }
 
-      <button type="submit" disabled={this.state.sessionUsername === ""} onClick={this.clear}>Clear cookie</button>
-      {this.state.message}
-      </div>
-    )
-  }
+    render() {
+
+        return (
+            <div className="container">
+                <Form >
+                    <Form.Group>
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="email"
+                            placeholder="Email"
+                            value={this.state.email}
+                            onChange={this.onChange}
+                        />
+                        <div style={{ fontSize: 12, color:"tomato" }} >
+                           {this.state.emailError}
+                        </div>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type={this.state.hidden ? 'password' : 'text'}
+                            name="password"
+                            placeholder="Password"
+                            value={this.state.password}
+                            onChange={this.onChange}
+                            />
+                        <div style={{ fontSize: 12, color:"tomato" }} >
+                           {this.state.passwordError}
+                        </div>
+
+                        <Button
+                            onClick={this.toggleShow}>
+                            Show/Hide                                                     
+                        </Button> 
+                    </Form.Group>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        className="btn btn-primary"
+                        onClick={this.onFormSubmit}>
+                        Submit
+                    </Button>
+                </Form>
+                <span> Dont have an accounct? </span>
+                <Link to="/signup" >Sign Up</Link>
+            </div>
+        );
+    }
 }

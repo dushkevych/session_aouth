@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import { isEmail } from "validator";
+import { isEmail, isEmpty, isLength } from "validator";
 
 const initialState = {
     email: "",
@@ -23,13 +23,32 @@ export default class SignIn extends Component {
 
         validate = () => {
             let emailError = "";
+            let passwordError = "";
+
+            if (isEmpty(this.state.email)){
+                emailError = 'E-mail is required*'
+            };
 
             if (!isEmail(this.state.email)){
-                emailError = 'Email have to be valid'
-            }
-            
-            if (emailError) {
-                this.setState({emailError});
+                emailError = 'Valid e-mail is required*'
+            };
+
+            if (!isEmpty(this.state.password)){
+                passwordError = 'Password is required*'
+            };
+
+            if (!isLength({ min: 8 })){
+                passwordError = 'password must be at least 8 characters long*'
+            };
+
+    //   .isLength({ min: 8 }).withMessage('password must be 8 characters')
+    //   //password must be at least 8 characters long, contain uppercase letters, lowercase letters, numbers, can contain special characters
+    //   .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
+    //   .trim().escape()
+    //   .withMessage('password must be at least 8 characters long, contain UPPERCASE LETTERS, lowercase letters, numbers, can contain special characters')
+
+            if (emailError || passwordError) {
+                this.setState({emailError, passwordError});
                 return false;
             }
 
@@ -55,14 +74,28 @@ export default class SignIn extends Component {
           this.setState(initialState)  
         }
     }
-    onChange = (e) => {
+    onChangeEmail = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         })
         const isValid = this.validate();
+        
         if (isValid) {
             this.setState({
                 emailError: ""
+            })   
+        }
+    }
+
+    onChangePassword = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+        const isValid = this.validate();
+        
+        if (isValid) {
+            this.setState({
+                passwordError: ""
             })   
         }
     }
@@ -71,11 +104,7 @@ export default class SignIn extends Component {
         this.setState({ hidden: !this.state.hidden });
       }
 
-    redirectToSignUp() {
-        //
-    }
-
-    render() {
+      render() {
 
         return (
             <div className="container">
@@ -87,7 +116,7 @@ export default class SignIn extends Component {
                             name="email"
                             placeholder="Email"
                             value={this.state.email}
-                            onChange={this.onChange}
+                            onChange={this.onChangeEmail}
                         />
                         <div style={{ fontSize: 10, color:"red" }} >
                            {this.state.emailError}
@@ -101,7 +130,7 @@ export default class SignIn extends Component {
                             name="password"
                             placeholder="Password"
                             value={this.state.password}
-                            onChange={this.onChange}
+                            onChange={this.onChangePassword}
                             />
 
                         <Button

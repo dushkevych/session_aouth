@@ -23,7 +23,7 @@ exports.signUpValidationChain = [
       //password must be at least 8 characters long, contain uppercase letters, lowercase letters, numbers, can contain special characters
       .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
       .trim().escape()
-      .withMessage('password must be at least 8 characters long, contain uppercase letters, lowercase letters, numbers, can contain special characters')
+      .withMessage('password must be at least 8 characters long, contain UPPERCASE LETTERS, lowercase letters, numbers, can contain special characters')
   ]
 
 exports.validateSignUp = (req, res, next) => {
