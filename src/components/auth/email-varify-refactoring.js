@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Button, InputGroup, Col } from 'react-bootstrap';
 import {Formik} from 'formik';
@@ -8,16 +9,10 @@ const schema = yup.object({
   email: yup.string()
     .email('Invalid email address')
     .required('Required'),
-  firstName: yup.string()
-    .max(15, 'Must be 20 characters or less')
-    .required('Required'),
-  lastName: yup.string()
-    .max(15, 'Must be 20 characters or less')
-    .required('Required'),
   password: yup.string()
     .max(20, 'Must be 20 characters or less')
     .required('Required')
-    .matches( "^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{6,}$",
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/, 
     "Must Contain at least 6 Characters, One Uppercase, One Lowercase, One Number, can have special case Characters"
   ),  
 });
@@ -33,14 +28,12 @@ function FormExample() {
       onSubmit={ async(values) => {
        
         try {
-           const { email, firstName, lastName, password } = values;
+           const { email, password } = values;
 
-           const response = await axios.post('http://localhost:3001/api/signup', {
+           const response = await axios.post('http://localhost:3001/api/signin', {
                 email,
-                firstName,
-                lastName,
                 password
-        })
+              }); 
 
         } catch (error){
             return error;
@@ -62,6 +55,7 @@ function FormExample() {
         isValid,
         errors,
       }) => (
+        <div className="container">
         <Form noValidate onSubmit={handleSubmit}>
 
             <Form.Group as={Col} md="4" controlId="validationFormikEmail">
@@ -85,30 +79,6 @@ function FormExample() {
               </InputGroup>
             </Form.Group>
           
-            <Form.Group as={Col} md="4" controlId="validationFormik01">
-              <Form.Label>First name</Form.Label>
-              <Form.Control
-                type="text"
-                name="firstName"
-                value={values.firstName}
-                onChange={handleChange}
-                isValid={touched.firstName && !errors.firstName}
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-            
-            <Form.Group as={Col} md="4" controlId="validationFormik02">
-              <Form.Label>Last name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleChange}
-                isValid={touched.lastName && !errors.lastName}
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-
             <Form.Group as={Col} md="4" controlId="formGroupPassword">
               <Form.Label>Password</Form.Label>
                 <InputGroup>
@@ -136,8 +106,17 @@ function FormExample() {
             </Form.Group>
               
           <Button type="submit">Submit form</Button>
+          
+          <div>
+            <span> If you are not registered yet</span>
+            <span> You are welcome to </span>
+            <Link to="/signup" >Sign Up</Link>
+          </div>
+        
         </Form>
+        </div>
       )}
+             
     </Formik>
   );
 }

@@ -1,105 +1,158 @@
-import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Form, Button, ButtonToolbar } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Form, Button, InputGroup, Col } from 'react-bootstrap';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 
-export default class SignUp extends Component {
-    
-        state = {
-            email: "",
-            firstName: "",
-            lastName: "",
-            password: "",
-            hidden: true,
-    }
+const schema = yup.object({
+  email: yup.string()
+    .email('Invalid email address')
+    .required('Required'),
+  firstName: yup.string()
+    .max(20, 'Must be 20 characters or less')
+    .required('Required'),
+  lastName: yup.string()
+    .max(20, 'Must be 20 characters or less')
+    .required('Required'),
+  password: yup.string()
+    .max(20, 'Must be 20 characters or less')
+    .required('Required')
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/, 
+    "Must Contain at least 6 Characters, One Uppercase, One Lowercase, One Number, can have special case Characters"
+  ),  
+});
 
-    onFormSubmit = async(e) => {
-        e.preventDefault();
-        const {email, firstName, lastName, password} = this.state
+function FormExample() {
+
+  const [ visible, setVisible ] = useState("password");
+
+  return (
+    <Formik
+      validationSchema={schema}
+      
+      onSubmit={ async(values) => {
+       
         try {
-            await axios.post('http://localhost:3001/api/signup', {
+           const { email, firstName, lastName, password } = values;
+
+           const response = await axios.post('http://localhost:3001/api/signup', {
                 email,
                 firstName,
                 lastName,
-                password,
-            })
+                password
+        })
+
         } catch (error){
             return error;
         }
-    }        
-      
-    onChange = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
+    }}
+      initialValues={{
+        email: '',
+        firstName: '',
+        lastName: '',
+        password: ''
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+      }) => (
+        <div className="container">
+        <Form noValidate onSubmit={handleSubmit}>
 
-    toggleShow = () => {
-        this.setState({ hidden: !this.state.hidden });
-      }
+            <Form.Group as={Col} md="4" controlId="validationFormikEmail">
+              <Form.Label>Email</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  placeholder="Email"
+                  aria-describedby="inputGroupPrepend"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+          
+            <Form.Group as={Col} md="4" controlId="validationFormik01">
+              <Form.Label>First name</Form.Label>
+              <Form.Control
+                type="text"
+                name="firstName"
+                value={values.firstName}
+                onChange={handleChange}
+                isInvalid={!!errors.firstName}
+                //isValid={touched.firstName && !errors.firstName}
+              />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            </Form.Group>
+            
+            <Form.Group as={Col} md="4" controlId="validationFormik02">
+              <Form.Label>Last name</Form.Label>
+              <Form.Control
+                type="text"
+                name="lastName"
+                value={values.lastName}
+                onChange={handleChange}
+                isInvalid={!!errors.lastName}
+                //isValid={touched.lastName && !errors.lastName}
+              />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            </Form.Group>
 
-    render() {
-        return (
-            <div className="container">
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="email"
-                            placeholder="Email"
-                            value={this.state.email}
-                            onChange={this.onChange}
-                            className="md-col-2"
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="firstName"
-                            placeholder="First Name"
-                            value={this.state.firstName}
-                            onChange={this.onChange}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="lastName"
-                            placeholder="Last Name"
-                            value={this.state.lastName}
-                            onChange={this.onChange}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type={this.state.hidden ? 'password' : 'text'}
-                            name="password"
-                            placeholder="Password"
-                            value={this.state.password}
-                            onChange={this.onChange}
-                            />
-                        <Button
-                            onClick={this.toggleShow}>
-                            Show/Hide                                                     
-                        </Button>                       
-                    </Form.Group>
-                    <Button
-                        variant="primary"
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={this.onFormSubmit}>
-                        Submit
+            <Form.Group as={Col} md="4" controlId="formGroupPassword">
+              <Form.Label>Password</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type={visible}  //{this.state.hidden ? 'password' : 'text'}
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    isValid={touched.password && !errors.password}
+                    isInvalid={!!errors.password}
+                    id="pass_icon"
+                  />
+                  <InputGroup.Append>
+                    <Button 
+                      variant="outline-secondary"
+                      onClick={ () =>  visible ==="password" ? setVisible("text")  : setVisible("password") } 
+                    > 
+                      Show/Hide
                     </Button>
-                </Form>
-                <div>
-                    <span>You have account </span>
-                    <Link to="/signin" >Sign In</Link>
-                </div>
-            </div>
-        );
-    }
+                  </InputGroup.Append>
+                  <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+              
+          <Button type="submit">Submit form</Button>
+          
+          <div>
+            <span> Allready registered user? </span>
+            <span> You are welcome to </span>
+            <Link to="/signin" >Sign In</Link>
+          </div>
+        
+        </Form>
+        </div>
+      )}
+             
+    </Formik>
+  );
 }
+
+export default FormExample;

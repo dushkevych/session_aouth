@@ -1,154 +1,124 @@
-import React, {Component} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import { isEmail, isEmpty, isLength } from "validator";
+import { Form, Button, InputGroup, Col } from 'react-bootstrap';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 
-const initialState = {
-    email: "",
-    password: "",
-    hidden: true,
-    emailError: ""
-    }
+const schema = yup.object({
+  email: yup.string()
+    .email('Invalid email address')
+    .required('Required'),
+  password: yup.string()
+    .max(20, 'Must be 20 characters or less')
+    .required('Required')
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/, 
+    "Must Contain at least 6 Characters, One Uppercase, One Lowercase, One Number, can have special case Characters"
+  ),  
+});
 
-export default class SignIn extends Component {
+function FormExample() {
 
-    state = {
-        email: "",
-        password: "",
-        hidden: true,
-        emailError: ""
-        }
+  const [ visible, setVisible ] = useState("password");
 
-        validate = () => {
-            let emailError = "";
-            let passwordError = "";
-
-            if (isEmpty(this.state.email)){
-                emailError = 'E-mail is required*'
-            };
-
-            if (!isEmail(this.state.email)){
-                emailError = 'Valid e-mail is required*'
-            };
-
-            if (!isEmpty(this.state.password)){
-                passwordError = 'Password is required*'
-            };
-
-            if (!isLength({ min: 8 })){
-                passwordError = 'password must be at least 8 characters long*'
-            };
-
-    //   .isLength({ min: 8 }).withMessage('password must be 8 characters')
-    //   //password must be at least 8 characters long, contain uppercase letters, lowercase letters, numbers, can contain special characters
-    //   .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
-    //   .trim().escape()
-    //   .withMessage('password must be at least 8 characters long, contain UPPERCASE LETTERS, lowercase letters, numbers, can contain special characters')
-
-            if (emailError || passwordError) {
-                this.setState({emailError, passwordError});
-                return false;
-            }
-
-            return true;
-        };
-
-    onFormSubmit = async (e)=> {
-        e.preventDefault();
-        const isValid = this.validate();
-        const {email, password} = this.state
-        
-        if (isValid) {
+  return (
+    <Formik
+      validationSchema={schema}
+      
+      onSubmit={ async(values) => {
+       
         try {
-            await axios.post('http://localhost:3001/api/signin', {
+           const { email, password } = values;
+
+           const response = await axios.post('http://localhost:3001/api/signin', {
                 email,
-                password,
-            })
-            console.log('password', password ) 
-            } catch (error){
+                password
+              }); 
+
+        } catch (error){
             return error;
-            }
-
-          this.setState(initialState)  
         }
-    }
-    onChangeEmail = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-        const isValid = this.validate();
-        
-        if (isValid) {
-            this.setState({
-                emailError: ""
-            })   
-        }
-    }
+    }}
+      initialValues={{
+        email: '',
+        firstName: '',
+        lastName: '',
+        password: ''
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+      }) => (
+        <div className="container">
+        <Form noValidate onSubmit={handleSubmit}>
 
-    onChangePassword = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-        const isValid = this.validate();
-        
-        if (isValid) {
-            this.setState({
-                passwordError: ""
-            })   
-        }
-    }
-
-    toggleShow = () => {
-        this.setState({ hidden: !this.state.hidden });
-      }
-
-      render() {
-
-        return (
-            <div className="container">
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="email"
-                            placeholder="Email"
-                            value={this.state.email}
-                            onChange={this.onChangeEmail}
-                        />
-                        <div style={{ fontSize: 10, color:"red" }} >
-                           {this.state.emailError}
-                        </div>
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type={this.state.hidden ? 'password' : 'text'}
-                            name="password"
-                            placeholder="Password"
-                            value={this.state.password}
-                            onChange={this.onChangePassword}
-                            />
-
-                        <Button
-                            onClick={this.toggleShow}>
-                            Show/Hide                                                     
-                        </Button> 
-                    </Form.Group>
-                    <Button
-                        variant="primary"
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={this.onFormSubmit}>
-                        Submit
+            <Form.Group as={Col} md="4" controlId="validationFormikEmail">
+              <Form.Label>Email</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  type="text"
+                  placeholder="Email"
+                  aria-describedby="inputGroupPrepend"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+          
+            <Form.Group as={Col} md="4" controlId="formGroupPassword">
+              <Form.Label>Password</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type={visible}  //{this.state.hidden ? 'password' : 'text'}
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    isValid={touched.password && !errors.password}
+                    isInvalid={!!errors.password}
+                    id="pass_icon"
+                  />
+                  <InputGroup.Append>
+                    <Button 
+                      variant="outline-secondary"
+                      onClick={ () =>  visible ==="password" ? setVisible("text")  : setVisible("password") } 
+                    > 
+                      Show/Hide
                     </Button>
-                </Form>
-                <span> Dont have an accounct? </span>
-                <Link to="/signup" >Sign Up</Link>
-            </div>
-        );
-    }
+                  </InputGroup.Append>
+                  <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </InputGroup>
+            </Form.Group>
+              
+          <Button type="submit">Submit form</Button>
+          
+          <div>
+            <span> If you are not registered yet</span>
+            <span> You are welcome to </span>
+            <Link to="/signup" >Sign Up</Link>
+          </div>
+        
+        </Form>
+        </div>
+      )}
+             
+    </Formik>
+  );
 }
+
+export default FormExample;
